@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>AI工具实战分享 - Workbuddy深度使用</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#1a1a2e}
+.wrap{max-width:480px;margin:0 auto;background:#f0f2f5;min-height:100vh;position:relative}
+.page{display:none;padding-bottom:60px}
+.page.active{display:block}
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:480px;max-width:100%;height:56px;background:#fff;display:flex;border-top:1px solid #eee;z-index:100}
+.tb-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:#999;cursor:pointer;gap:2px;border:none;background:none}
+.tb-item.active{color:#4361ee}
+.tb-item .icon{font-size:20px}
+.back{padding:14px 16px;font-size:14px;color:#4361ee;cursor:pointer;display:inline-block}
+.hero{background:linear-gradient(135deg,#4361ee,#7209b7);color:#fff;padding:48px 24px 36px;text-align:center}
+.hero h1{font-size:24px;font-weight:700}
+.hero .sub{font-size:14px;opacity:.85;margin-top:10px}
+.hero .bdg{display:inline-block;background:rgba(255,255,255,.15);padding:4px 20px;border-radius:20px;font-size:12px;margin-top:14px}
+.sec{padding:20px 16px}
+.st{font-size:17px;font-weight:600;margin-bottom:16px;display:flex;align-items:center}
+.st::before{content:"";width:4px;height:18px;background:#4361ee;border-radius:2px;margin-right:10px}
+.tc{display:flex;align-items:center;padding:16px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer}
+.av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#4361ee,#7209b7);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#fff;flex-shrink:0}
+.tc .inf{margin-left:14px;flex:1}
+.tc .nm{font-size:17px;font-weight:600}
+.tc .tl{font-size:13px;color:#888;margin-top:4px}
+.tc .ar{color:#ccc;font-size:18px}
+.th{background:#fff;padding:24px 16px 20px;text-align:center}
+.bav{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#4361ee,#7209b7);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:600;color:#fff}
+.tnm{font-size:22px;font-weight:700}
+.ttl{font-size:14px;color:#888;margin-top:6px}
+.tds{font-size:13px;color:#666;margin:10px auto 0;line-height:1.7;max-width:320px}
+.cc{background:#fff;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer}
+.cc-img{height:150px;background-color:#f0f0f0;background-size:contain;background-repeat:no-repeat;background-position:center}
+.cc-inf{padding:14px 16px 16px}
+.cc-inf .ti{font-size:16px;font-weight:600;margin-bottom:6px}
+.cc-inf .de{font-size:13px;color:#888;line-height:1.5}
+.cc-pr{font-size:18px;color:#f72585;font-weight:700;margin-top:8px}
+.cd-img{height:180px;background-color:#f0f0f0;background-size:contain;background-repeat:no-repeat;background-position:center}
+.cd-inf{padding:16px;background:#fff}
+.cd-inf h1{font-size:20px;font-weight:700;margin-bottom:8px}
+.cd-inf .de{font-size:14px;color:#666;line-height:1.6;margin-bottom:10px}
+.cd-pr{font-size:24px;color:#f72585;font-weight:700}
+.cd-original{font-size:14px;color:#bbb;text-decoration:line-through;margin-left:8px}
+.ls{padding:20px 16px}
+.ls h2{font-size:17px;font-weight:600;margin-bottom:14px}
+.li{display:flex;align-items:center;padding:14px 0;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.idx{width:28px;height:28px;background:#4361ee;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.idx.done{background:#4caf50}
+.li-inf{flex:1;margin-left:12px}
+.li-inf .ti{font-size:15px;font-weight:500}
+.li-inf .du{font-size:12px;color:#999;margin-top:4px}
+.nv{height:220px;display:flex;align-items:center;justify-content:center;color:#999;flex-direction:column;gap:8px;background:#1a1a1a}
+.nv .ic{font-size:40px}
+.ld{padding:16px;font-size:14px;color:#888}
+.empty{padding:60px 16px;text-align:center;color:#999}
+.buy-area{padding:16px;background:#fff;border-top:1px solid #f0f0f0;position:sticky;bottom:60px}
+.buy-btn{display:block;width:100%;padding:14px;background:linear-gradient(135deg,#f60,#ff8c00);color:#fff;border:none;border-radius:10px;font-size:18px;font-weight:600;cursor:pointer;text-align:center}
+.buy-btn:hover{opacity:.9}
+.buy-btn.done{background:linear-gradient(135deg,#4caf50,#66bb6a);cursor:default}
+.buy-btn .sub{font-size:12px;font-weight:400;opacity:.8;display:block;margin-top:2px}
+.my-card{display:flex;background:#fff;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer}
+.my-cover{width:120px;min-height:80px;background:#f0f0f0;background-size:contain;background-repeat:no-repeat;background-position:center;flex-shrink:0}
+.my-info{flex:1;padding:14px}
+.my-info .ti{font-size:15px;font-weight:600;margin-bottom:6px}
+.my-info .te{font-size:12px;color:#888}
+.my-info .price{font-size:14px;color:#f72585;font-weight:600;margin-top:6px}
+.my-info .tag{display:inline-block;background:#e8f5e9;color:#4caf50;font-size:11px;padding:2px 8px;border-radius:10px;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1>AI 工具实战分享</h1>
+    <p class="sub">Workbuddy 的深度使用<br>从入门到效率倍增</p>
+    <span class="bdg">实战派 · 无废话</span>
+  </div>
+  <div class="sec">
+    <div class="st">课程讲师</div>
+    <div class="tc" id="btn-teacher">
+      <div class="av">马</div>
+      <div class="inf">
+        <div class="nm">马跃</div>
+        <div class="tl">AI工具践行者 / Workbuddy培训师</div>
+      </div>
+      <span class="ar">›</span>
+    </div>
+  </div>
+</div>
+
+<div id="page-teacher" class="page">
+  <div class="back" id="btn-back-teacher">← 返回</div>
+  <div class="th">
+    <div class="bav">马</div>
+    <div class="tnm">马跃</div>
+    <div class="ttl">AI工具践行者 / Workbuddy培训师</div>
+    <div class="tds">聚焦AI工具在实际工作流中的落地应用，擅长将复杂工具转化为可操作的实战方法。致力于帮助职场人用AI工具提升10倍效率。</div>
+  </div>
+  <div class="sec">
+    <div class="st">他的课程</div>
+    <div id="teacher-courses"></div>
+  </div>
+</div>
+
+<div id="page-course" class="page">
+  <div class="back" id="btn-back-course">← 返回</div>
+  <div class="cd-img" id="course-cover" style="background-image:url(cover.png)"></div>
+  <div class="cd-inf">
+    <h1 id="course-title">Workbuddy 从入门到精通</h1>
+    <p class="de" id="course-desc">手把手带你掌握Workbuddy的全部核心功能，从下载安装到实战应用，一套课搞定AI工作流。</p>
+    <div id="course-price-area">
+      <span class="cd-pr" id="course-price">¥99</span>
+      <span class="cd-original" id="course-original">¥199</span>
+    </div>
+  </div>
+  <div class="buy-area">
+    <div class="buy-btn" id="btn-buy">立即购买 <span class="sub">限时优惠 · 永久有效</span></div>
+  </div>
+  <div class="ls">
+    <h2 id="lesson-count">课时列表</h2>
+    <div id="lesson-list"></div>
+  </div>
+</div>
+
+<div id="page-lesson" class="page">
+  <div class="back" id="btn-back-lesson">← 返回</div>
+  <div id="lesson-video"></div>
+  <div class="ld" id="lesson-info"></div>
+</div>
+
+<div id="page-my" class="page">
+  <div style="padding:14px 16px;background:#fff;border-bottom:1px solid #f0f0f0"><h1 style="font-size:18px;font-weight:600">我的已购</h1></div>
+  <div class="sec" id="my-list-area">
+    <div id="my-list"></div>
+    <div class="empty" id="my-empty" style="display:none">
+      <p style="margin-bottom:12px;">还没有购买课程</p>
+      <a href="#" id="link-home" style="color:#4361ee;">去首页看看</a>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tb-item active" id="tab-home"><span class="icon">🏠</span><span>首页</span></div>
+  <div class="tb-item" id="tab-my"><span class="icon">📚</span><span>我的</span></div>
+</div>
+</div>
+
+<script>
+var _stack = ["page-home"];
+var PURCHASED = true;
+var PURCHASE_DATE = "2026-06-12";
+var NOW = "2026-06-12";
+
+var COURSES = [{id:1, title:"Workbuddy从入门到精通", description:"手把手带你掌握Workbuddy的全部核心功能，从下载安装到实战应用，一套课搞定AI工作流。", price:"¥99", original:"¥199", cover:"cover.png"}];
+var LESSONS = [{"cid": 1, "title": "下载与安装", "dur": "04:51", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/901cc9fe5001834806455710763/k7CkhHke398A.mp4"}, {"cid": 1, "title": "界面布局详解", "dur": "05:43", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/5c160c3c5001834806410645187/fJU2D70NAH4A.mp4"}, {"cid": 1, "title": "核心配置项说明", "dur": "09:31", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/478b72535001834806413826201/aV3F1QrJulIA.mp4"}, {"cid": 1, "title": "模型选择与知识库连接", "dur": "08:30", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/8d5dd6ea5001834806407799950/k6Sj131MNBQA.mp4"}, {"cid": 1, "title": "实战演示1", "dur": "13:03", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/d85e62a25001834806456507366/JWeY0VdV7P4A.mp4"}, {"cid": 1, "title": "实战演示2", "dur": "18:31", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/c23168ea5001834806459684563/pw2EwGhHO6wA.mp4"}, {"cid": 1, "title": "实用小方法", "dur": "04:10", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/335f3cdf5001834806454090926/SuoOvrym3u0A.mp4"}];
+
+function _show(id){var ps=document.querySelectorAll(".page");for(var i=0;i<ps.length;i++)ps[i].classList.remove("active");document.getElementById(id).classList.add("active");window.scrollTo(0,0);}
+function _push(id){if(_stack[_stack.length-1]!==id)_stack.push(id);}
+function goHome(){_show("page-home");_push("page-home");updateTab("tab-home");}
+function goMy(){showMy();_show("page-my");_push("page-my");updateTab("tab-my");}
+function goBack(){if(_stack.length>1){_stack.pop();_show(_stack[_stack.length-1]);}}
+function updateTab(id){var ts=document.querySelectorAll(".tb-item");for(var i=0;i<ts.length;i++)ts[i].classList.remove("active");document.getElementById(id).classList.add("active");}
+
+function goTeacher(){var el=document.getElementById("teacher-courses");var h="";for(var i=0;i<COURSES.length;i++){var c=COURSES[i];var img=c.cover?'<div class="cc-img" style="background-image:url('+c.cover+')"></div>':'<div class="cc-img" style="background:linear-gradient(135deg,#4361ee,#3a0ca3);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:700">'+c.title[0]+'</div>';h+='<div class="cc" onclick="goCourse('+c.id+')">'+img+'<div class="cc-inf"><div class="ti">'+c.title+'</div><div class="de">'+c.description+'</div><div class="cc-pr">'+c.price+'</div></div></div>';}el.innerHTML=h;_show("page-teacher");_push("page-teacher");}
+
+function goCourse(id){var c=COURSES[0];for(var i=0;i<COURSES.length;i++){if(COURSES[i].id===id){c=COURSES[i];break;}}document.getElementById("course-cover").style.backgroundImage=c.cover?'url('+c.cover+')':'none';document.getElementById("course-title").textContent=c.title;document.getElementById("course-desc").textContent=c.description;document.getElementById("course-price").textContent=c.price;if(c.original)document.getElementById("course-original").textContent=c.original;var btn=document.getElementById("btn-buy");if(PURCHASED){btn.innerHTML='✓ 已购买 <span class="sub">2026-06-12 购买 · 永久有效</span>';btn.className='buy-btn done';btn.onclick=function(){goLesson(0);}}else{btn.innerHTML='立即购买 <span class="sub">限时优惠 · 永久有效</span>';btn.className='buy-btn';btn.onclick=handleBuy;}var h="";var n=0;for(var i=0;i<LESSONS.length;i++){if(LESSONS[i].cid===id){var cls=LESSONS[i].vod?'idx done':'idx';h+='<div class="li" onclick="goLesson('+n+')"><div class="'+cls+'">'+(n+1)+'</div><div class="li-inf"><div class="ti">'+LESSONS[i].title+'</div><div class="du">'+(LESSONS[i].dur||'暂无时长')+'</div></div></div>';n++;}}document.getElementById("lesson-count").textContent="课时列表 · 共"+n+"节 · "+(PURCHASED?"已购买":"未购买");document.getElementById("lesson-list").innerHTML=h;_show("page-course");_push("page-course");}
+
+function goLesson(idx){var l=LESSONS[idx]||LESSONS[0];var h=l.vod?'<video controls autoplay style="width:100%;max-height:50vh;background:#000" src="'+l.vod+'"></video>':'<div class="nv"><span class="ic">🎬</span><p>上传视频后即可播放</p></div>';document.getElementById("lesson-video").innerHTML=h;document.getElementById("lesson-info").innerHTML='<strong>'+l.title+'</strong><span style="margin-left:12px;color:#999;">'+(l.dur||'暂无时长')+'</span>';_show("page-lesson");_push("page-lesson");}
+
+function handleBuy(){if(confirm('模拟购买：¥99\n\n确认后该课程将出现在"我的已购"中。\n（展示用，不产生实际扣款）')){PURCHASED=true;PURCHASE_DATE=NOW;goCourse(1);showMy();alert('✅ 购买成功！\n课程已添加到"我的已购"\n可以开始学习了');}}
+
+function showMy(){var el=document.getElementById("my-list");var em=document.getElementById("my-empty");if(PURCHASED){em.style.display='none';var h='';for(var i=0;i<COURSES.length;i++){var c=COURSES[i];h+='<div class="my-card" onclick="goCourse('+c.id+')"><div class="my-cover" style="background-image:url('+c.cover+')"></div><div class="my-info"><div class="ti">'+c.title+'</div><div class="te">购买于 '+PURCHASE_DATE+'</div><div class="price">'+c.price+'</div><span class="tag">✓ 已购买</span></div></div>';}el.innerHTML=h;}else{em.style.display='block';el.innerHTML='';}}
+
+document.addEventListener("DOMContentLoaded",function(){var e=document.getElementById("btn-teacher");if(e)e.onclick=goTeacher;e=document.getElementById("btn-back-teacher");if(e)e.onclick=goBack;e=document.getElementById("btn-back-course");if(e)e.onclick=goBack;e=document.getElementById("btn-back-lesson");if(e)e.onclick=goBack;e=document.getElementById("tab-home");if(e)e.onclick=goHome;e=document.getElementById("tab-my");if(e)e.onclick=goMy;e=document.getElementById("link-home");if(e)e.onclick=goHome;});
+</script>
+</body>
+</html>
+
+

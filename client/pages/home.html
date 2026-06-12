@@ -1,0 +1,37 @@
+﻿<!-- 首页 -->
+<script type="text/x-template" id="home-tpl">
+  <div class="home">
+    <header class="home-header">
+      <h1>好课</h1>
+      <p class="subtitle">精选名师课程，随时在线学习</p>
+    </header>
+    <section class="teacher-list">
+      <h2>名师推荐</h2>
+      <div v-if="loading" class="loading">加载中...</div>
+      <div v-else-if="teachers.length === 0" class="empty">暂无导师</div>
+      <div v-else class="teacher-cards">
+        <div v-for="t in teachers" :key="t.id" class="teacher-card" @click="$router.push('/teacher/'+t.id)">
+          <div class="avatar" :style="{ backgroundImage: t.avatar ? 'url('+t.avatar+')' : '' }">
+            <span v-if="!t.avatar">{{ t.name.charAt(0) }}</span>
+          </div>
+          <div class="info">
+            <div class="name">{{ t.name }}</div>
+            <div class="title">{{ t.title }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</script>
+<style>
+.home-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 40px 20px 32px; text-align: center; }
+.home-header h1 { font-size: 28px; font-weight: 700; }
+.home-header .subtitle { font-size: 14px; opacity: .8; margin-top: 8px; }
+.teacher-list { padding: 20px 16px; }
+.teacher-list h2 { font-size: 18px; margin: 0 0 16px; }
+.teacher-card { display: flex; align-items: center; padding: 14px; background: #fff; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer; }
+.teacher-card .avatar { width: 52px; height: 52px; border-radius: 50%; background: #e8e8e8; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #999; flex-shrink: 0; }
+.teacher-card .info { margin-left: 14px; }
+.teacher-card .name { font-size: 16px; font-weight: 600; }
+.teacher-card .title { font-size: 13px; color: #888; margin-top: 4px; }
+</style>

@@ -1,0 +1,358 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>好课 - 在线学习平台</title>
+  <script src="https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue-router@4.3.2/dist/vue-router.global.prod.js"></script>
+  <script src="https://unpkg.com/axios@1.7.2/dist/axios.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f6fa; color: #333; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; background: #fff; display: flex; border-top: 1px solid #eee; z-index: 100; }
+    .tab-bar a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #999; gap: 2px; }
+    .tab-bar a.active { color: #667eea; }
+    .tab-bar a .icon { font-size: 20px; line-height: 1; }
+    .page-wrap { padding-bottom: 60px; min-height: 100vh; }
+    .loading { text-align: center; color: #999; padding: 60px 0; }
+    .empty { text-align: center; color: #999; padding: 60px 16px; }
+    .back { font-size: 14px; color: #667eea; cursor: pointer; padding: 12px 16px; display: inline-block; }
+    .page-header { padding: 12px 16px; background: #fff; display: flex; align-items: center; }
+    .page-header .back { padding: 0; margin-right: 12px; }
+    .page-header h1 { font-size: 18px; }
+
+    /* 首页 */
+    .home-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 40px 20px 32px; text-align: center; }
+    .home-header h1 { font-size: 28px; font-weight: 700; }
+    .home-header .subtitle { font-size: 14px; opacity: .8; margin-top: 8px; }
+    .teacher-list { padding: 20px 16px; }
+    .teacher-list h2 { font-size: 18px; margin: 0 0 16px; }
+    .teacher-card { display: flex; align-items: center; padding: 14px; background: #fff; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer; }
+    .teacher-card .avatar { width: 52px; height: 52px; border-radius: 50%; background: #e8e8e8; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #999; flex-shrink: 0; }
+    .teacher-card .info { margin-left: 14px; }
+    .teacher-card .name { font-size: 16px; font-weight: 600; }
+    .teacher-card .title { font-size: 13px; color: #888; margin-top: 4px; }
+
+    /* 导师页 */
+    .teacher-page .t-header { background: #fff; padding: 20px 16px; text-align: center; }
+    .teacher-page .t-avatar { width: 72px; height: 72px; border-radius: 50%; background: #e8e8e8; background-size: cover; background-position: center; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #999; }
+    .teacher-page .t-name { font-size: 22px; font-weight: 600; }
+    .teacher-page .t-title { font-size: 14px; color: #888; margin-top: 4px; }
+    .teacher-page .t-desc { font-size: 13px; color: #666; margin-top: 8px; line-height: 1.6; }
+    .tc-list { padding: 20px 16px; }
+    .tc-list h2 { font-size: 18px; margin: 0 0 16px; }
+    .tc-card { background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer; }
+    .tc-cover { height: 160px; background: #e8e8e8; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #ccc; }
+    .tc-info { padding: 12px 14px; }
+    .tc-info .title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .tc-price { font-size: 18px; color: #f60; font-weight: 700; }
+    .tc-price.free { color: #4caf50; }
+
+    /* 课程页 */
+    .course-cover { height: 200px; background: #e8e8e8; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #ccc; }
+    .course-info { padding: 16px; background: #fff; }
+    .course-info h1 { font-size: 20px; margin: 0 0 8px; }
+    .course-desc { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 10px; }
+    .course-meta { font-size: 13px; color: #888; margin-bottom: 12px; }
+    .course-meta span { margin-right: 16px; cursor: pointer; }
+    .course-price { font-size: 24px; color: #f60; font-weight: 700; margin-bottom: 14px; }
+    .course-price.free { color: #4caf50; }
+    .course-original { font-size: 14px; color: #bbb; text-decoration: line-through; margin-left: 8px; }
+    .buy-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #f60, #ff8c00); color: #fff; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; }
+    .buy-btn:disabled { opacity: .6; }
+    .purchased-tag { text-align: center; color: #4caf50; font-size: 15px; padding: 10px; background: #e8f5e9; border-radius: 8px; margin-top: 10px; }
+    .lesson-list { padding: 20px 16px; }
+    .lesson-list h2 { font-size: 18px; margin: 0 0 16px; }
+    .lesson-item { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+    .lesson-item.locked { opacity: .5; cursor: default; }
+    .lesson-idx { width: 28px; height: 28px; background: #667eea; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+    .lesson-info-wrap { flex: 1; margin-left: 12px; }
+    .lesson-info-wrap .title { font-size: 15px; }
+    .lesson-meta { font-size: 12px; color: #999; margin-top: 4px; }
+    .free-tag { background: #e8f5e9; color: #4caf50; padding: 1px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+
+    /* 播放页 */
+    .video-wrapper { background: #000; }
+    .video-player { width: 100%; max-height: 50vh; display: block; }
+    .no-video { height: 240px; display: flex; align-items: center; justify-content: center; color: #999; }
+    .lesson-duration { padding: 16px; font-size: 14px; color: #888; }
+
+    /* 已购 */
+    .my-list { padding: 16px; }
+    .my-card { display: flex; background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer; }
+    .my-cover { width: 120px; height: 80px; background: #e8e8e8; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #ccc; flex-shrink: 0; }
+    .my-info { flex: 1; padding: 12px 14px; }
+    .my-info .title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .my-date { font-size: 12px; color: #999; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="page-wrap">
+      <router-view />
+    </div>
+    <div class="tab-bar" v-if="$route.path === '/' || $route.path === '/my'">
+      <router-link to="/" :class="{ active: $route.path === '/' }">
+        <span class="icon">🏠</span><span>首页</span>
+      </router-link>
+      <router-link to="/my" :class="{ active: $route.path === '/my' }">
+        <span class="icon">📚</span><span>我的</span>
+      </router-link>
+    </div>
+  </div>
+
+  <script>
+  const { createApp, ref, onMounted, computed } = Vue;
+  const { createRouter, createWebHashHistory } = VueRouter;
+
+  const api = axios.create({ baseURL: 'http://127.0.0.1:4567/api', timeout: 15000 });
+  api.interceptors.request.use(cfg => {
+    const t = localStorage.getItem('token');
+    if (t) cfg.headers.Authorization = 'Bearer ' + t;
+    return cfg;
+  });
+
+  // ======== 首页 ========
+  const Home = {
+    template: `
+      <div class="home">
+        <header class="home-header">
+          <h1>好课</h1>
+          <p class="subtitle">精选名师课程，随时在线学习</p>
+        </header>
+        <section class="teacher-list">
+          <h2>名师推荐</h2>
+          <div v-if="loading" class="loading">加载中...</div>
+          <div v-else-if="!teachers.length" class="empty">暂无导师</div>
+          <div v-else>
+            <div v-for="t in teachers" :key="t.id" class="teacher-card" @click="$router.push('/teacher/'+t.id)">
+              <div class="avatar" :style="{ backgroundImage: t.avatar ? 'url('+t.avatar+')' : '' }">
+                <span v-if="!t.avatar">{{ t.name[0] }}</span>
+              </div>
+              <div class="info">
+                <div class="name">{{ t.name }}</div>
+                <div class="title">{{ t.title }}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>`,
+    setup() {
+      const teachers = ref([]);
+      const loading = ref(true);
+      onMounted(async () => {
+        try { const r = await api.get('/teachers'); teachers.value = r.data.teachers; }
+        catch (e) { console.error(e); } finally { loading.value = false; }
+      });
+      return { teachers, loading };
+    }
+  };
+
+  // ======== 导师页 ========
+  const Teacher = {
+    template: `
+      <div class="teacher-page">
+        <div class="back" @click="$router.push('/')">← 返回</div>
+        <div class="t-header">
+          <div class="t-avatar" :style="{ backgroundImage: teacher?.avatar ? 'url('+teacher.avatar+')' : '' }">
+            <span v-if="!teacher?.avatar">{{ teacher?.name?.[0] }}</span>
+          </div>
+          <div class="t-name">{{ teacher?.name }}</div>
+          <div class="t-title">{{ teacher?.title }}</div>
+          <div class="t-desc">{{ teacher?.description }}</div>
+        </div>
+        <section class="tc-list">
+          <h2>他的课程</h2>
+          <div v-if="loading" class="loading">加载中...</div>
+          <div v-else-if="!courses.length" class="empty">暂无课程</div>
+          <div v-else>
+            <div v-for="c in courses" :key="c.id" class="tc-card" @click="$router.push('/course/'+c.id)">
+              <div class="tc-cover" :style="{ backgroundImage: c.cover ? 'url('+c.cover+')' : '' }">
+                <span v-if="!c.cover">{{ c.title[0] }}</span>
+              </div>
+              <div class="tc-info">
+                <div class="title">{{ c.title }}</div>
+                <div class="tc-price" :class="{ free: c.price === 0 }">
+                  <template v-if="c.price > 0">¥{{ (c.price/100).toFixed(2) }}</template>
+                  <template v-else>免费</template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>`,
+    setup() {
+      const route = VueRouter.useRoute(); const teacher = ref(null);
+      const courses = ref([]); const loading = ref(true);
+      onMounted(async () => {
+        try {
+          const [t, c] = await Promise.all([
+            api.get('/teachers/'+route.params.id),
+            api.get('/courses', { params: { teacher_id: route.params.id } })
+          ]);
+          teacher.value = t.data.teacher; courses.value = c.data.courses;
+        } catch(e){console.error(e)}finally{loading.value=false}
+      });
+      return { teacher, courses, loading };
+    }
+  };
+
+  // ======== 课程详情 ========
+  const Course = {
+    template: `
+      <div>
+        <div class="back" @click="$router.back()">← 返回</div>
+        <div class="course-cover" :style="{ backgroundImage: course?.cover ? 'url('+course.cover+')' : '' }">
+          <span v-if="!course?.cover">{{ course?.title?.[0] }}</span>
+        </div>
+        <div class="course-info" v-if="course">
+          <h1>{{ course.title }}</h1>
+          <p class="course-desc">{{ course.description }}</p>
+          <div class="course-meta">
+            <span v-if="course.teacher" @click="$router.push('/teacher/'+course.teacher.id)">👤 {{ course.teacher.name }}</span>
+            <span>{{ lessons.length }} 课时</span>
+          </div>
+          <div class="course-price" :class="{ free: course.price === 0 }">
+            <template v-if="course.price > 0">¥{{ (course.price/100).toFixed(2) }}</template>
+            <template v-else>免费</template>
+            <span class="course-original" v-if="course.original_price > course.price">¥{{ (course.original_price/100).toFixed(2) }}</span>
+          </div>
+          <button class="buy-btn" v-if="!purchased && course.price > 0" :disabled="buying" @click="handleBuy">
+            {{ buying ? '处理中...' : '立即购买' }}
+          </button>
+          <div class="purchased-tag" v-if="purchased">✓ 已购买，可观看全部课时</div>
+        </div>
+        <section class="lesson-list">
+          <h2>课时列表</h2>
+          <div v-if="loading" class="loading">加载中...</div>
+          <div v-else-if="!lessons.length" class="empty">暂无课时</div>
+          <div v-else>
+            <div v-for="(l,i) in lessons" :key="l.id" class="lesson-item" :class="{ locked: !l.can_play }" @click="playLesson(l)">
+              <div class="lesson-idx">{{ i+1 }}</div>
+              <div class="lesson-info-wrap">
+                <div class="title">{{ l.title }}</div>
+                <div class="lesson-meta">
+                  <span>{{ formatDuration(l.duration) }}</span>
+                  <span class="free-tag" v-if="l.free_preview">试看</span>
+                  <span v-if="!l.can_play">🔒</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>`,
+    setup() {
+      const route = VueRouter.useRoute(); const router = VueRouter.useRouter();
+      const course = ref(null); const lessons = ref([]);
+      const purchased = ref(false); const buying = ref(false); const loading = ref(true);
+      onMounted(async () => {
+        try {
+          const [c, l] = await Promise.all([
+            api.get('/courses/'+route.params.id),
+            api.get('/lessons', { params: { course_id: route.params.id } })
+          ]);
+          course.value = c.data.course; purchased.value = l.data.purchased;
+          lessons.value = l.data.lessons;
+        } catch(e){console.error(e)}finally{loading.value=false}
+      });
+      function playLesson(l) { if(l.can_play) router.push('/lesson/'+l.id); }
+      function formatDuration(sec) { if(!sec) return ''; const m=Math.floor(sec/60), s=sec%60; return m+':'+String(s).padStart(2,'0'); }
+      async function handleBuy() {
+        buying.value = true;
+        try {
+          const r = await api.post('/orders/create', { course_id: course.value.id });
+          alert('订单已创建：'+r.data.wx_order_no+'\n（后续对接微信支付后自动跳转）');
+        } catch(e){alert(e.response?.data?.error||'创建订单失败')}
+        finally { buying.value = false; }
+      }
+      return { course, lessons, purchased, buying, loading, playLesson, formatDuration, handleBuy };
+    }
+  };
+
+  // ======== 播放页 ========
+  const Lesson = {
+    template: `
+      <div>
+        <div class="back" @click="$router.back()">← 返回</div>
+        <div v-if="lesson">
+          <div class="video-wrapper">
+            <video v-if="lesson.video_url" :src="lesson.video_url" controls autoplay class="video-player"
+              @timeupdate="onTimeUpdate" @ended="onEnded"></video>
+            <div v-else class="no-video"><p>暂无视频</p></div>
+          </div>
+          <div class="lesson-duration">时长：{{ formatDuration(lesson.duration) }}</div>
+        </div>
+      </div>`,
+    setup() {
+      const route = VueRouter.useRoute(); const lesson = ref(null);
+      let timer = null;
+      onMounted(async () => {
+        try { const r = await api.get('/lessons/'+route.params.id); lesson.value = r.data.lesson; } catch(e){console.error(e)}
+      });
+      function onTimeUpdate(e) {
+        const v = e.target; if(!v||!v.duration) return;
+        if(!timer) timer = setInterval(() => report(v), 30000);
+      }
+      function onEnded(e) { report(e.target, true); }
+      async function report(v, completed=false) {
+        try { await api.post('/lessons/'+lesson.value.id+'/progress', { watched_seconds: Math.floor(v.currentTime), completed: completed?1:0 }); } catch {}
+      }
+      function formatDuration(sec) { if(!sec) return ''; return Math.floor(sec/60)+'分'+(sec%60)+'秒'; }
+      return { lesson, onTimeUpdate, onEnded, formatDuration };
+    }
+  };
+
+  // ======== 我的已购 ========
+  const MyPurchases = {
+    template: `
+      <div>
+        <div class="page-header">
+          <h1>我的已购</h1>
+        </div>
+        <div v-if="loading" class="loading">加载中...</div>
+        <div v-else-if="!courses.length" class="empty">
+          <p>还没有购买课程</p>
+        </div>
+        <div v-else class="my-list">
+          <div v-for="c in courses" :key="c.id" class="my-card" @click="$router.push('/course/'+c.id)">
+            <div class="my-cover" :style="{ backgroundImage: c.cover ? 'url('+c.cover+')' : '' }">
+              <span v-if="!c.cover">{{ c.title[0] }}</span>
+            </div>
+            <div class="my-info">
+              <div class="title">{{ c.title }}</div>
+              <div class="my-date">购买于 {{ fmtDate(c.paid_at) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+    setup() {
+      const courses = ref([]); const loading = ref(true);
+      onMounted(async () => {
+        try { const r = await api.get('/orders/my'); courses.value = r.data.courses; } catch(e){console.error(e)}
+        finally { loading.value = false; }
+      });
+      function fmtDate(d) { return d ? d.slice(0,10) : ''; }
+      return { courses, loading, fmtDate };
+    }
+  };
+
+  // ======== 路由 & 启动 ========
+  const router = createRouter({
+    history: createWebHashHistory(),
+    routes: [
+      { path: '/', component: Home },
+      { path: '/teacher/:id', component: Teacher },
+      { path: '/course/:id', component: Course },
+      { path: '/lesson/:id', component: Lesson },
+      { path: '/my', component: MyPurchases },
+    ]
+  });
+
+  const app = createApp({});
+  app.use(router);
+  app.mount('#app');
+  </script>
+</body>
+</html>
