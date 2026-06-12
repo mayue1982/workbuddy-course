@@ -1,0 +1,3 @@
+CreateObject("WScript.Shell").Run "cmd /c start /B node D:\Documents\???\server\src\app.js", 0, False
+WScript.Sleep 4000
+CreateObject("WScript.Shell").Run "cmd /c start /B node -e ""var f=require('fs'),p=require('path'),m={'.html':'text/html;charset=utf-8'},h=f.readFileSync('client/index.html','utf8').replace('baseURL: '',''/api'')','baseURL: '',''http://127.0.0.1:4567/api'')');f.writeFileSync('client/index.preview.html',h);require('http').createServer((q,r)=>{var fp=p.join('D:\\Documents\\???\\client',q.url==='/'?'index.preview.html':q.url);f.readFile(fp,(e,d)=>{if(e){r.writeHead(404);r.end('404');return;}r.writeHead(200,{'Content-Type':m[p.extname(fp)]||'text/plain'});r.end(d);});}).listen(8080,'127.0.0.1',()=>{});""", 0, False
