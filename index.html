@@ -35,12 +35,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,Roboto,"PingFang SC","Microsof
 .ttl{font-size:14px;color:#888;margin-top:6px}
 .tds{font-size:13px;color:#666;margin:10px auto 0;line-height:1.7;max-width:320px}
 .cc{background:#fff;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer}
-.cc-img{height:150px;background-color:#f0f0f0;background-size:contain;background-repeat:no-repeat;background-position:center;position:relative}
+.cc-img{height:auto;aspect-ratio:16/9;background-color:#eef1f6;background-size:cover;background-repeat:no-repeat;background-position:center;position:relative}
 .cc-inf{padding:14px 16px 16px}
 .cc-inf .ti{font-size:16px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .cc-inf .de{font-size:13px;color:#888;line-height:1.5}
 .cc-pr{font-size:18px;color:#f72585;font-weight:700;margin-top:8px}
-.cd-img{height:180px;background-color:#f0f0f0;background-size:contain;background-repeat:no-repeat;background-position:center;position:relative}
+.cd-img{height:auto;aspect-ratio:16/9;background-color:#eef1f6;background-size:cover;background-repeat:no-repeat;background-position:center;position:relative}
 .cd-inf{padding:16px;background:#fff}
 .cd-inf h1{font-size:20px;font-weight:700;margin-bottom:8px}
 .cd-inf .de{font-size:14px;color:#666;line-height:1.6;margin-bottom:10px}
@@ -64,7 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,Roboto,"PingFang SC","Microsof
 .buy-btn.done{background:linear-gradient(135deg,#4caf50,#66bb6a);cursor:default}
 .buy-btn .sub{font-size:12px;font-weight:400;opacity:.8;display:block;margin-top:2px}
 .my-card{display:flex;background:#fff;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer}
-.my-cover{width:120px;min-height:80px;background:#f0f0f0;background-size:contain;background-repeat:no-repeat;background-position:center;flex-shrink:0;position:relative}
+.my-cover{width:120px;min-height:80px;background:#eef1f6;background-size:cover;background-repeat:no-repeat;background-position:center;flex-shrink:0;position:relative}
 .my-info{flex:1;padding:14px}
 .my-info .ti{font-size:15px;font-weight:600;margin-bottom:6px}
 .my-info .te{font-size:12px;color:#888}
@@ -128,7 +128,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,Roboto,"PingFang SC","Microsof
 
 <div id="page-course" class="page">
   <div class="back" id="btn-back-course">← 返回</div>
-  <div class="cd-img" id="course-cover" style="background-image:url(cover.webp)"></div>
+  <div class="cd-img" id="course-cover" style="background-image:url(cover-16x9.webp)"></div>
   <div class="cd-inf">
     <h1 id="course-title">Workbuddy 从入门到精通</h1>
     <p class="de" id="course-desc">手把手带你掌握Workbuddy的全部核心功能，从下载安装到实战应用，一套课搞定AI工作流。</p>
@@ -176,10 +176,10 @@ var PURCHASE_DATE = "2026-06-12";
 var NOW = "2026-06-12";
 
 var COURSES = [
-  {id:4, title:"Codex 地表最强 AI Agent", description:"从科学上网、ChatGPT 科普到 Codex 登录与 CC-Switch，完整搭建你的 Codex AI Agent 使用环境。", price:"¥99", original:"¥199", cover:"codex-agent-cover.webp", coverClass:"codex-cover", isNew:true},
-  {id:3, title:"第六课 工具更新与接入", description:"掌握最新工具更新，快速了解 AI Agent，并完成 Workbuddy 的新玩法与接入。", price:"¥99", original:"¥199", cover:"workbuddy-tools-cover.webp", isNew:true},
-  {id:2, title:"Workbuddy实用技能分享", description:"武装好skill，你将无所不能。", price:"¥99", original:"¥199", cover:"workbuddy-skill-cover.webp"},
-  {id:1, title:"Workbuddy从入门到精通", description:"手把手带你掌握Workbuddy的全部核心功能，从下载安装到实战应用，一套课搞定AI工作流。", price:"¥99", original:"¥199", cover:"cover.webp"}
+  {id:4, title:"Codex 地表最强 AI Agent", description:"从科学上网、ChatGPT 科普到 Codex 登录与 CC-Switch，完整搭建你的 Codex AI Agent 使用环境。", price:"¥99", original:"¥199", cover:"codex-agent-cover-16x9.webp", coverClass:"codex-cover", isNew:true},
+  {id:3, title:"第六课 工具更新与接入", description:"掌握最新工具更新，快速了解 AI Agent，并完成 Workbuddy 的新玩法与接入。", price:"¥99", original:"¥199", cover:"workbuddy-tools-cover-16x9.webp", isNew:true},
+  {id:2, title:"Workbuddy实用技能分享", description:"武装好skill，你将无所不能。", price:"¥99", original:"¥199", cover:"workbuddy-skill-cover-16x9.webp"},
+  {id:1, title:"Workbuddy从入门到精通", description:"手把手带你掌握Workbuddy的全部核心功能，从下载安装到实战应用，一套课搞定AI工作流。", price:"¥99", original:"¥199", cover:"cover-16x9.webp"}
 ];
 var LESSONS = [{"cid":4,"title":"科学上网 1 · 免费插件","dur":"06:52","bvid":"","vod":"https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/83f042b45001834820486000329/l6725jinQZoA.mp4"},{"cid":4,"title":"科学上网 2 · v2ray","dur":"17:25","bvid":"","vod":"https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/02d95f1c5001834820396320692/D6aySaGLZAAA.mp4"},{"cid":4,"title":"ChatGPT 科普","dur":"08:18","bvid":"","vod":"https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/58b1cf0d5001834820400206436/ku7BYZGOTHQA.mp4"},{"cid":4,"title":"免费版 Codex","dur":"16:03","bvid":"","vod":"https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/95c0079f5001834820398017195/A5AmCvNur6UA.mp4"},{"cid":4,"title":"ChatGPT 付费","dur":"19:59","bvid":"","vod":"https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/ff1af4505001834820562869879/zcJLl3YEDCQA.mp4"},{"cid":4,"title":"Codex 登录与 CC-Switch","dur":"25:39","bvid":"","vod":"https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/95cf7a975001834820398022704/fkVa5fEFMtUA.mp4"},{"cid": 1, "title": "下载与安装", "dur": "04:51", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/901cc9fe5001834806455710763/k7CkhHke398A.mp4"}, {"cid": 1, "title": "界面布局详解", "dur": "05:43", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/5c160c3c5001834806410645187/fJU2D70NAH4A.mp4"}, {"cid": 1, "title": "核心配置项说明", "dur": "09:31", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/478b72535001834806413826201/aV3F1QrJulIA.mp4"}, {"cid": 1, "title": "模型选择与知识库连接", "dur": "08:30", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/8d5dd6ea5001834806407799950/k6Sj131MNBQA.mp4"}, {"cid": 1, "title": "实战演示1", "dur": "13:03", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/d85e62a25001834806456507366/JWeY0VdV7P4A.mp4"}, {"cid": 1, "title": "实战演示2", "dur": "18:31", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/c23168ea5001834806459684563/pw2EwGhHO6wA.mp4"}, {"cid": 1, "title": "实用小方法", "dur": "04:10", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/335f3cdf5001834806454090926/SuoOvrym3u0A.mp4"}, {"cid": 2, "title": "为什么要学深入学习workbuddy", "dur": "02:39", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/62d80b305001834809777315698/KfaSZGZPvYsA.mp4"}, {"cid": 2, "title": "节省积分技巧", "dur": "15:38", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/df9dfffc5001834809772212327/aLsL0BKOM8IA.mp4"}, {"cid": 2, "title": "ppt-skill的安装和使用", "dur": "20:18", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/1cefec245001834809776626610/XV3uQSjC68wA.mp4"}, {"cid": 2, "title": "其它常用的skill推荐", "dur": "08:46", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/3d7f42d35001834809773996096/Rni90epFExQA.mp4", "attachments": [{"title": "HTML 编辑网站", "url": "https://www.heyhtml.com/"}, {"title": "ayyy-ppt-slider.zip（网盘，提取码：328m）", "url": "https://pan.baidu.com/s/1Z1GtOY5wqFOsPglngZ5F2Q?pwd=328m"}]}, {"cid": 3, "title": "工具更新速通", "dur": "33:00", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/33aff1785001834818822043334/TBAankms7ssA.mp4"}, {"cid": 3, "title": "AI Agent的概览", "dur": "22:00", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/5cc9369c5001834818891080007/NNKfPstVEfwA.mp4"}, {"cid": 3, "title": "Workbuddy的新玩法", "dur": "25:00", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/7a95c2085001834818748948311/kWjgVSfJNugA.mp4"}, {"cid": 3, "title": "AI Agent的接入", "dur": "16:00", "bvid": "", "vod": "https://1393458749.vod-qcloud.com/c2915f57vodcq1393458749/3f3d07165001834818897928907/VZ5WXd1VFakA.mp4"}];
 
